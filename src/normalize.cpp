@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include "normalize.h"
 using namespace Rcpp;
 using namespace std;
 

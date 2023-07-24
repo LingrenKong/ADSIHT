@@ -8,6 +8,7 @@ using namespace Rcpp;
 #include "Algorithm.h"
 #include "utilities.h"
 #include "Metric.h"
+#include "path.h"
 using namespace Eigen;
 using namespace std;
 
