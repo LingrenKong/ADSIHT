@@ -1,5 +1,5 @@
 rm(list = ls())
-library(DSIHT)
+library(ADSIHT)
 library(grpreg)
 library(sparsegl)
 library(stringr)
@@ -33,7 +33,7 @@ gen.coef <- function(s, k, Tn, J, i, signal){
 
 sgl <- function(x, y, group){
   fit <- sparsegl(x, y, group, eps = 1e-3, asparse = 0.1)
-  temp <- estimate_risk(fit, type = "EBIC1", approx_df = TRUE)
+  temp <- estimate_risk(fit, type = "BIC", approx_df = TRUE)#EBIC1?
   ind <- which.min(temp[, 3])
   beta <- fit$beta[, ind]
   inter <- fit$b0[ind]
@@ -108,7 +108,7 @@ result <- sapply(1:100, function(i){
   intercept <- coef[1]
   MCP1 <- c(f(true, MCP), 10*sqrt(sum(sum((beta1-beta)^2)+intercept^2)), t)
 #
-#   t <- as.numeric(system.time(fit <- DSIHT(x, y, group = group, L = 5, rho = 0.95))[3])
+#   t <- as.numeric(system.time(fit <- ADSIHT(x, y, group = group, L = 5, kappa = 0.95))[3])
 #   l <- which.min(fit$ic)
 #   coef <- c(fit$intercept[l], fit$beta[, l])
 #   best.group <- which(fit$beta[, l] != 0)
@@ -117,7 +117,7 @@ result <- sapply(1:100, function(i){
 #   dsiht1 <- c(f(true, dsiht), sqrt(sum(sum((coef[-1]-beta)^2)+coef[1]^2)/sum(beta^2)), t)
 #   round(dsiht1, 3)
 
-  t <- as.numeric(system.time(fit <- DSIHT(x, y, group = group, L = 5, rho = 0.95, method = "fast", ic.type = "ebic"))[3])
+  t <- as.numeric(system.time(fit <- ADSIHT(x, y, group = group, L = 5, kappa = 0.95, ic.type = "ebic"))[3])
   l <- which.min(fit$ic)
   coef <- c(fit$intercept[l], fit$beta[, l])
   best.group <- which(fit$beta[, l] != 0)
@@ -221,7 +221,7 @@ result <- sapply(1:100, function(i){
   intercept <- coef[1]
   MCP1 <- c(f(true, MCP), 10*sqrt(sum(sum((beta1-beta)^2)+intercept^2)), t)
   #
-  #   t <- as.numeric(system.time(fit <- DSIHT(x, y, group = group, L = 5, rho = 0.95))[3])
+  #   t <- as.numeric(system.time(fit <- ADSIHT(x, y, group = group, L = 5, kappa = 0.95))[3])
   #   l <- which.min(fit$ic)
   #   coef <- c(fit$intercept[l], fit$beta[, l])
   #   best.group <- which(fit$beta[, l] != 0)
@@ -230,7 +230,7 @@ result <- sapply(1:100, function(i){
   #   dsiht1 <- c(f(true, dsiht), sqrt(sum(sum((coef[-1]-beta)^2)+coef[1]^2)/sum(beta^2)), t)
   #   round(dsiht1, 3)
 
-  t <- as.numeric(system.time(fit <- DSIHT(x, y, group = group, L = 5, rho = 0.95, method = "fast", ic.type = "ebic"))[3])
+  t <- as.numeric(system.time(fit <- ADSIHT(x, y, group = group, L = 5, kappa = 0.95, ic.type = "ebic"))[3])
   l <- which.min(fit$ic)
   coef <- c(fit$intercept[l], fit$beta[, l])
   best.group <- which(fit$beta[, l] != 0)
@@ -283,7 +283,7 @@ result <- sapply(1:50, function(i){
   intercept <- coef[1]
   MCP1 <- c(f(true, MCP), 10*sqrt(sum(sum((beta1-beta)^2)+intercept^2)), t)
 
-  t <- as.numeric(system.time(fit <- DSIHT(x, y, group = group, L = 5, rho = 0.9, method = "fast2", ic.type = "ebic", ic.coef2 = 0.1))[3])
+  t <- as.numeric(system.time(fit <- ADSIHT(x, y, group = group, L = 5, kappa = 0.9, ic.type = "ebic", ic.coef2 = 0.1))[3])
   l <- which.min(fit$ic)
   coef <- c(fit$intercept[l], fit$beta[, l])
   best.group <- which(fit$beta[, l] != 0)
