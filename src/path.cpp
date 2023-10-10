@@ -25,7 +25,7 @@ List sequential_path(Data &data, Algorithm *algorithm, Metric *metric, Eigen::Ve
   Eigen::VectorXi support_sequence = Eigen::VectorXi::Zero(sequence_size);
   algorithm->update_rho(rho);
   for (int i = 0; i < sequence_size; i++) {
-    algorithm->fit1(sequence(i), ic_coef);
+    algorithm->fit(sequence(i), ic_coef);
     beta_matrix.col(i) = algorithm->get_beta();
     lam_sequence(i) = algorithm->get_lambda();
     support_sequence(i) = algorithm->get_support_size();
