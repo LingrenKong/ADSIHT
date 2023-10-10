@@ -29,7 +29,7 @@ and their corresponding index in \code{group} should be the same.
 Denote the first group as \code{1}, the second \code{2}, etc.}
 
 \item{s0}{A vector that controls the degrees with group.
-Default is \code{d^((l-1)/(L-1)) : 1 \leq l \leq L}, where d is the maximum group size.}
+Default is \eqn{d^{(l-1)/(L-1)} : 1 \leq l \leq L}, where d is the maximum group size.}
 
 \item{kappa}{A parameter that controls the rapid of the decrease of threshold. Default is 0.9.}
 
