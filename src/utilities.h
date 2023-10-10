@@ -1,3 +1,5 @@
+#ifndef SRC_UTL_H
+#define SRC_UTL_H
 #include <algorithm>
 #include <Rcpp.h>
 #include <RcppEigen.h>
@@ -10,3 +12,5 @@ int group_support_size(Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::Ve
 Eigen::VectorXi support_set(Eigen::VectorXd &beta, int p, int size);
 double IC(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double s_0, int n, int m, int p, int d, double delta_t, double ic_coef);
 Eigen::VectorXd least_square(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, int p);
+
+#endif //SRC_UTL_H
