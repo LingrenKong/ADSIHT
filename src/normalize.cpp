@@ -15,18 +15,22 @@ void constant_warning_ith_variable(int i)
 }
 
 void Normalize(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &weights, Eigen::VectorXd &meanx, double &meany,
-               Eigen::VectorXd &normx) {
+               Eigen::VectorXd &normx, bool normalize_y) {
   int n = X.rows();
   int p = X.cols();
   Eigen::VectorXd tmp(n);
   for (int i = 0; i < p; i++) {
     meanx(i) = weights.dot(X.col(i)) / double(n);
   }
-  meany = (y.dot(weights)) / double(n);
-  for (int i = 0; i < p; i++) {
-    X.col(i) = X.col(i).array() - meanx(i);
+
+  if(norm_y){
+    meany = (y.dot(weights)) / double(n);
+    for (int i = 0; i < p; i++) {
+      X.col(i) = X.col(i).array() - meanx(i);
+    }
+    y = y.array() - meany;
   }
-  y = y.array() - meany;
+
 
   for (int i = 0; i < p; i++) {
     tmp = X.col(i);
