@@ -23,7 +23,7 @@ void Normalize(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &weights,
     meanx(i) = weights.dot(X.col(i)) / double(n);
   }
 
-  if(norm_y){
+  if(normalize_y){
     meany = (y.dot(weights)) / double(n);
     for (int i = 0; i < p; i++) {
       X.col(i) = X.col(i).array() - meanx(i);

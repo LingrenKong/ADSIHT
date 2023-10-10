@@ -35,6 +35,7 @@ public:
 
 class Data: public Data_Base{
 public:
+  Data() = default;
   Data(Eigen::MatrixXd& x, Eigen::VectorXd& y, Eigen::VectorXd& weight, Eigen::VectorXi& g_index);
   //construction function with normalization
 
@@ -43,6 +44,7 @@ public:
 
 class Data_logit: public Data_Base{
 public:
+  Data_logit() = default;
   Data_logit(Eigen::MatrixXd& x, Eigen::VectorXd& y, Eigen::VectorXd& weight, Eigen::VectorXi& g_index);
   //construction function with normalization only on x
 

@@ -59,6 +59,6 @@ Data_logit::Data_logit(Eigen::MatrixXd& x, Eigen::VectorXd& y, Eigen::VectorXd& 
   this->normalize_x();
 }
 
-void Data_logit::normalize_X() {
+void Data_logit::normalize_x() {
   Normalize(this->x, this->y, this->weight, this->x_mean, this->y_mean, this->x_norm,false);
 }
