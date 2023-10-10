@@ -56,7 +56,7 @@ public:
     return this->A_out;
   }
 
-  virtual void fit(double s_0, double ic_coef);
+  virtual void fit(double s_0, double ic_coef)=0;
 };
 
 class DSIHTLm : public Algorithm {
