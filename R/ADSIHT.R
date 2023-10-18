@@ -77,3 +77,41 @@ ADSIHT <- function(x, y, group,
 
   return(res)
 }
+
+ADSIHT_logit <- function(x, y, group,
+                   s0,
+                   kappa = 0.9,
+                   ic.type = c("ebic", "sic", "bic", "aic", "loss"),
+                   ic.scale = 1.0,
+                   ic.coef = 1.0,
+                   L = 5,
+                   weight = rep(1, nrow(x)))
+{
+  if(missing(group)) group <- 1:ncol(x)
+  p <- ncol(x)
+  n <- nrow(x)
+  N <- length(unique(group))
+  if (length(group)!= ncol(x)) stop("The length of group should be the same with ncol(x)")
+  if(!is.matrix(x)) x <- as.matrix(x)
+  vn <- colnames(x)
+  orderGi <- order(group)
+  x <- x[, orderGi]
+  vn <- vn[orderGi]
+  group <- group[orderGi]
+  gi <- unique(group)
+  index <- match(gi, group)-1
+  if (missing(s0)) {
+    s0 <- max(table(group))^(seq(1, L-1, length.out = L)/(L-1))
+  }
+  ic.type <- match.arg(ic.type)
+  ic_type <- switch(ic.type,
+                    "loss" = 0,
+                    "aic" = 1,
+                    "bic" = 2,
+                    "sic" = 3,
+                    "ebic" = 4
+  )
+  res <- DSIHT_Cpp_logit(x, y, weight = weight, sequence = s0, ic_type = ic_type, ic_scale = ic.scale, kappa = kappa, g_index = index, ic_coef = ic.coef)
+
+  return(res)
+}

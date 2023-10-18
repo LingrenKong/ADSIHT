@@ -91,7 +91,7 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
       break;
     }
   }
-  //beta1 = IWLS(x, y, beta1, p);
+  beta1 = IWLS(x, y, beta1, p);
   double delta_tbar = sqrt((y-x*beta1).squaredNorm()/n);
   double ic0, ic1 = IC(x, y, beta1, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
   this->ic = ic1;
@@ -99,7 +99,7 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
   this->lam = lam1;
   while (1) {
     beta0 = tau_logit(x, y, beta1, gindex, gsize, lam1, s_0, m, p);
-    //beta0 = IWLS(x, y, beta0, p);
+    beta0 = IWLS(x, y, beta0, p);
     Rcout<<"size:"<<(beta0.array() != 0).count()<<"\n";
     if ((beta0.array() != 0).count() >= p/5 || (beta0.array() != 0).count() >= x.rows()) break;
     lam0 = rho*lam1;

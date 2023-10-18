@@ -25,8 +25,8 @@ Eigen::VectorXd tau(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &bet
 
 double logit_transform(double x) // the functor we want to apply
 {
-  if (x > 1e10) return 1;
-  if (x < 1e-10) return 0;
+  if (x > 1e10) return 1-1e-7;
+  if (x < 1e-10) return 1e-7;
   return 1 / (1 + exp(-x));
 }
 
@@ -92,22 +92,62 @@ Eigen::VectorXd least_square(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::Vect
   }
 }
 
+// [[Rcpp::export]]
 Eigen::VectorXd IWLS(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, int p) {
-  //not finished yet
+  //Rcout << "running IWLS" << "\n";
   int size = (beta.array() != 0).count();
   if (size >= X.rows() || size == 0) {
     return beta;
   }
   else{
     Eigen::VectorXi set = support_set(beta, p, size);
+    //Rcout << "set:\n" << set << "\n";
     Eigen::MatrixXd X_temp = Eigen::MatrixXd::Zero(X.rows(), size);
     for (int i = 0; i < size; i++) {
       X_temp.col(i) = X.col(set(i));
     }
-    Eigen::VectorXd temp = X_temp.colPivHouseholderQr().solve(y);
+    Eigen::MatrixXd beta_cut = Eigen::VectorXd::Zero(size);
+    for (int i = 0; i < size; i++) {
+      beta_cut(i) = beta(set(i));
+    }
+
+    Rcpp::Environment stats("package:stats");
+    Rcpp::Function glm_fit = stats["glm.fit"];
+    //Rcout << "glm_fit:\n" << glm_fit << "\n";
+    Rcpp::Function binomial = stats["binomial"];
+    List result = glm_fit(X_temp,y,Named("family",binomial(Named("link","logit"))));
+    Rcpp::NumericVector glm_coef = result[0];
+    //beta_cut = result[0];
+    //Rcout << "result:\n" << result << "\n";
+    //Rcout << "glm_coef:\n" << glm_coef << "\n";
+    beta_cut = as<Eigen::VectorXd>(glm_coef);
+    // //Rcout << "beta_cut:\n" << beta_cut << "\n";
+    // Eigen::MatrixXd beta_tmp = beta_cut;
+    // Eigen::VectorXd eta,diff_tmp,Z,mu,v;Eigen::MatrixXd W;
+    // Rcout << "running iteration" << "\n";
+    // for(int iter = 0; iter < 1000; iter++) {//maxiter=100
+    //   eta = X_temp*beta_cut;
+    //   beta_tmp = beta_cut;
+    //   mu = logit_b1(eta);
+    //   //Rcout << "mu:\n" << mu << "\n";
+    //   v = mu*(Eigen::VectorXd::Ones(mu.size())-mu);
+    //   W = v.asDiagonal();
+    //   //Rcout << "W:\n" << W << "\n";
+    //   Z = eta + ( (y-mu).array()/v.array() ).matrix();
+    //   //Rcout << "Z:\n" << Z << "\n";
+    //   beta_cut = (X_temp.transpose()*W*X_temp).inverse()*X_temp.transpose()*W*Z;
+    //   //Rcout << "beta_cut:\n" << beta_cut << "\n";
+    //   diff_tmp = beta_tmp-beta_cut;
+    //   double D = diff_tmp.array().abs().maxCoeff();
+    //   if(D<1e-8){
+    //     Rcout << "break in iter" << iter << "\n";
+    //     break;
+    //   }
+    // }
+
     Eigen::VectorXd beta_hat = Eigen::VectorXd::Zero(p);
     for (int i = 0; i < size; i++) {
-      beta_hat(set(i)) = temp(i);
+      beta_hat(set(i)) = beta_cut(i);
     }
     return(beta_hat);
   }

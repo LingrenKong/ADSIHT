@@ -25,3 +25,17 @@ List DSIHT_Cpp(Eigen::MatrixXd &x, Eigen::VectorXd &y, Eigen::VectorXd &weight, 
   metric -> ~Metric();
   return result;
 }
+
+// [[Rcpp::export]]
+List DSIHT_Cpp_logit(Eigen::MatrixXd &x, Eigen::VectorXd &y, Eigen::VectorXd &weight, int ic_type,
+               double ic_scale, Eigen::VectorXd &sequence, double kappa, Eigen::VectorXi &g_index, double ic_coef)
+{
+  Data_logit data(x, y, weight, g_index);
+  data.add_weight();
+  Algorithm *algorithm = new DSIHT_logit(data);
+  Metric *metric = new LmMetric(ic_type, ic_scale);
+  List result = sequential_path(data, algorithm, metric, sequence, kappa, ic_coef);
+  algorithm -> ~Algorithm();
+  metric -> ~Metric();
+  return result;
+}

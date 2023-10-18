@@ -30,9 +30,44 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// DSIHT_Cpp_logit
+List DSIHT_Cpp_logit(Eigen::MatrixXd& x, Eigen::VectorXd& y, Eigen::VectorXd& weight, int ic_type, double ic_scale, Eigen::VectorXd& sequence, double kappa, Eigen::VectorXi& g_index, double ic_coef);
+RcppExport SEXP _ADSIHT_DSIHT_Cpp_logit(SEXP xSEXP, SEXP ySEXP, SEXP weightSEXP, SEXP ic_typeSEXP, SEXP ic_scaleSEXP, SEXP sequenceSEXP, SEXP kappaSEXP, SEXP g_indexSEXP, SEXP ic_coefSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::MatrixXd& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd& >::type weight(weightSEXP);
+    Rcpp::traits::input_parameter< int >::type ic_type(ic_typeSEXP);
+    Rcpp::traits::input_parameter< double >::type ic_scale(ic_scaleSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd& >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< double >::type kappa(kappaSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi& >::type g_index(g_indexSEXP);
+    Rcpp::traits::input_parameter< double >::type ic_coef(ic_coefSEXP);
+    rcpp_result_gen = Rcpp::wrap(DSIHT_Cpp_logit(x, y, weight, ic_type, ic_scale, sequence, kappa, g_index, ic_coef));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IWLS
+Eigen::VectorXd IWLS(Eigen::MatrixXd& X, Eigen::VectorXd& y, Eigen::VectorXd& beta, int p);
+RcppExport SEXP _ADSIHT_IWLS(SEXP XSEXP, SEXP ySEXP, SEXP betaSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::MatrixXd& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(IWLS(X, y, beta, p));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ADSIHT_DSIHT_Cpp", (DL_FUNC) &_ADSIHT_DSIHT_Cpp, 9},
+    {"_ADSIHT_DSIHT_Cpp_logit", (DL_FUNC) &_ADSIHT_DSIHT_Cpp_logit, 9},
+    {"_ADSIHT_IWLS", (DL_FUNC) &_ADSIHT_IWLS, 4},
     {NULL, NULL, 0}
 };
 

@@ -5,3 +5,11 @@ DSIHT_Cpp <- function(x, y, weight, ic_type, ic_scale, sequence, kappa, g_index,
     .Call('_ADSIHT_DSIHT_Cpp', PACKAGE = 'ADSIHT', x, y, weight, ic_type, ic_scale, sequence, kappa, g_index, ic_coef)
 }
 
+DSIHT_Cpp_logit <- function(x, y, weight, ic_type, ic_scale, sequence, kappa, g_index, ic_coef) {
+    .Call('_ADSIHT_DSIHT_Cpp_logit', PACKAGE = 'ADSIHT', x, y, weight, ic_type, ic_scale, sequence, kappa, g_index, ic_coef)
+}
+
+IWLS <- function(X, y, beta, p) {
+    .Call('_ADSIHT_IWLS', PACKAGE = 'ADSIHT', X, y, beta, p)
+}
+
