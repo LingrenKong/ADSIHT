@@ -13,7 +13,7 @@ using namespace std;
 
 class Algorithm {
 public:
-  Data data;
+  Data_Base data;
   Eigen::VectorXd beta;
   Eigen::VectorXi A_out;
   int size;
@@ -23,7 +23,7 @@ public:
 
   Algorithm() = default;
 
-  Algorithm(Data &data)
+  Algorithm(Data_Base &data)
   {
     this->data = data;
     this->beta = Eigen::VectorXd::Zero(data.p);
@@ -61,13 +61,13 @@ public:
 
 class DSIHTLm : public Algorithm {
 public:
-  DSIHTLm(Data &data) : Algorithm(data){};
+  DSIHTLm(Data_Base &data) : Algorithm(data){};
   void fit(double s_0, double ic_coef);
 };
 
 class DSIHT_logit : public Algorithm {
 public:
-  DSIHT_logit(Data &data) : Algorithm(data){};
+  DSIHT_logit(Data_Base &data) : Algorithm(data){};
   void fit(double s_0, double ic_coef);
 };
 

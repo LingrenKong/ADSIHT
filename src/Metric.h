@@ -19,9 +19,9 @@ public:
     this->ic_coef = ic_coef;
   };
 
-  virtual double loss(Algorithm *algorithm, Data &data) = 0;
+  virtual double loss(Algorithm *algorithm, Data_Base &data) = 0;
 
-  virtual double ic(Algorithm *algorithm, Data &data) = 0;
+  virtual double ic(Algorithm *algorithm, Data_Base &data) = 0;
 };
 
 class LmMetric : public Metric {
@@ -29,9 +29,9 @@ public:
 
   LmMetric(int ic_type, double ic_coef) : Metric(ic_type, ic_coef) {};
 
-  double loss(Algorithm *algorithm, Data &data);
+  double loss(Algorithm *algorithm, Data_Base &data);
 
-  double ic(Algorithm *algorithm, Data &data);
+  double ic(Algorithm *algorithm, Data_Base &data);
 };
 
 #endif //SRC_METRICS_H

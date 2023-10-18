@@ -1,10 +1,10 @@
 #include "Metric.h"
 
-double LmMetric::loss(Algorithm *algorithm, Data &data) {
+double LmMetric::loss(Algorithm *algorithm, Data_Base &data) {
   return (data.y - data.x * algorithm->get_beta()).squaredNorm() / (data.n);
 }
 
-double LmMetric::ic(Algorithm *algorithm, Data &data) {
+double LmMetric::ic(Algorithm *algorithm, Data_Base &data) {
   if (ic_type == 0) {
     return this->loss(algorithm, data);
   } else if (ic_type == 1) {

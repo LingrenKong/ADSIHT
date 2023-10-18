@@ -12,7 +12,7 @@ using namespace Rcpp;
 using namespace Eigen;
 using namespace std;
 
-List sequential_path(Data &data, Algorithm *algorithm, Metric *metric, Eigen::VectorXd sequence, double rho, double ic_coef)
+List sequential_path(Data_Base &data, Algorithm *algorithm, Metric *metric, Eigen::VectorXd sequence, double rho, double ic_coef)
 {
   int p = data.p;
   int m = data.g_num;

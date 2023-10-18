@@ -11,7 +11,7 @@
 using namespace std;
 
 void DSIHTLm::fit(double s_0, double ic_coef) {
-  Data data = this->data;
+  Data_Base data = this->data;
   Eigen::MatrixXd x = data.x;
   Eigen::VectorXd y = data.y;
   int n = data.n;
@@ -66,7 +66,7 @@ void DSIHTLm::fit(double s_0, double ic_coef) {
 }
 
 void DSIHT_logit::fit(double s_0, double ic_coef) {
-  Data data = this->data;
+  Data_Base data = this->data;
   Eigen::MatrixXd x = data.x;
   Eigen::VectorXd y = data.y;
   int n = data.n;
