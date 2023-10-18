@@ -91,7 +91,7 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
       break;
     }
   }
-  beta1 = IWLS(x, y, beta1, p);
+  //beta1 = IWLS(x, y, beta1, p);
   double delta_tbar = sqrt((y-x*beta1).squaredNorm()/n);
   double ic0, ic1 = IC(x, y, beta1, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
   this->ic = ic1;
@@ -99,19 +99,19 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
   this->lam = lam1;
   while (1) {
     beta0 = tau_logit(x, y, beta1, gindex, gsize, lam1, s_0, m, p);
-    beta0 = IWLS(x, y, beta0, p);
-    // Rcout<<"size:"<<(beta0.array() != 0).count()<<"\n";
+    //beta0 = IWLS(x, y, beta0, p);
+    Rcout<<"size:"<<(beta0.array() != 0).count()<<"\n";
     if ((beta0.array() != 0).count() >= p/5 || (beta0.array() != 0).count() >= x.rows()) break;
     lam0 = rho*lam1;
     ic0 = IC(x, y, beta0, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
-    // Rcout<<"-IC0:"<<ic0<<"\n";
-    // Rcout<<"-IC1:"<<this->ic<<"\n";
+    Rcout<<"-IC0:"<<ic0<<"\n";
+    Rcout<<"-IC1:"<<this->ic<<"\n";
     if (ic0 < this->ic) {
       this->beta = beta0;
       this->lam = lam0;
       this->ic = ic0;
       beta1 = beta0;
-      // Rcout<<"Update"<<"\n";
+      Rcout<<"Update"<<"\n";
     }
     lam1 = lam0;
     if (lam1 < log(exp(1)*d/s_0)*delta_tbar/n) break;

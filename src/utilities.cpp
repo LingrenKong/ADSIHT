@@ -23,13 +23,19 @@ Eigen::VectorXd tau(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &bet
      return temp;
 }
 
+double logit_transform(double x) // the functor we want to apply
+{
+  if (x > 1e10) return 1;
+  if (x < 1e-10) return 0;
+  return 1 / (1 + exp(-x));
+}
+
 Eigen::VectorXd logit_b1(Eigen::VectorXd theta){
-  result = 1/(1+Eigen::exp(-theta)) //need overflow check
-  return result
+  return theta.unaryExpr(&logit_transform);
 }
 
 Eigen::VectorXd tau_logit(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double lambda, double s_0, int m, int p) {
-  Eigen::VectorXd temp = beta+X.transpose()*(y-X*beta)/X.rows();
+  Eigen::VectorXd temp = beta+X.transpose()*(y-logit_b1(X*beta))/X.rows();
   for (int i = 0; i < p; i++) {
     if (abs(temp(i)) < lambda) temp(i) = 0.0;
   }
@@ -87,6 +93,7 @@ Eigen::VectorXd least_square(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::Vect
 }
 
 Eigen::VectorXd IWLS(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, int p) {
+  //not finished yet
   int size = (beta.array() != 0).count();
   if (size >= X.rows() || size == 0) {
     return beta;
