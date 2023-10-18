@@ -65,4 +65,10 @@ public:
   void fit(double s_0, double ic_coef);
 };
 
+class DSIHT_logit : public Algorithm {
+public:
+  DSIHT_logit(Data &data) : Algorithm(data){};
+  void fit(double s_0, double ic_coef);
+};
+
 #endif //SRC_ALGORITHM_H

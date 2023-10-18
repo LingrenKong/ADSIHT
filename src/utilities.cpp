@@ -23,6 +23,24 @@ Eigen::VectorXd tau(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &bet
      return temp;
 }
 
+Eigen::VectorXd logit_b1(Eigen::VectorXd theta){
+  result = 1/(1+Eigen::exp(-theta)) //need overflow check
+  return result
+}
+
+Eigen::VectorXd tau_logit(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double lambda, double s_0, int m, int p) {
+  Eigen::VectorXd temp = beta+X.transpose()*(y-X*beta)/X.rows();
+  for (int i = 0; i < p; i++) {
+    if (abs(temp(i)) < lambda) temp(i) = 0.0;
+  }
+  for (int i = 0; i < m; i++) {
+    if (temp.segment(gindex(i), gsize(i)).squaredNorm() < s_0*pow(lambda, 2)) {
+      temp.segment(gindex(i), gsize(i)) = Eigen::VectorXd::Zero(gsize(i));
+    }
+  }
+  return temp;
+}
+
 
 int group_support_size(Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, int m) {
   int size = 0;
@@ -68,6 +86,25 @@ Eigen::VectorXd least_square(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::Vect
   }
 }
 
+Eigen::VectorXd IWLS(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, int p) {
+  int size = (beta.array() != 0).count();
+  if (size >= X.rows() || size == 0) {
+    return beta;
+  }
+  else{
+    Eigen::VectorXi set = support_set(beta, p, size);
+    Eigen::MatrixXd X_temp = Eigen::MatrixXd::Zero(X.rows(), size);
+    for (int i = 0; i < size; i++) {
+      X_temp.col(i) = X.col(set(i));
+    }
+    Eigen::VectorXd temp = X_temp.colPivHouseholderQr().solve(y);
+    Eigen::VectorXd beta_hat = Eigen::VectorXd::Zero(p);
+    for (int i = 0; i < size; i++) {
+      beta_hat(set(i)) = temp(i);
+    }
+    return(beta_hat);
+  }
+}
 
 double IC(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double s_0, int n, int m, int p, int d, double delta_t, double ic_coef) {
   int size1 = group_support_size(beta, gindex, gsize, m);
