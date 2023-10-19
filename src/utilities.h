@@ -9,6 +9,7 @@ using namespace Rcpp;
 double Delta(double s_0, int m, int d);
 Eigen::VectorXd tau(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double lambda, double s_0, int m, int p);
 double logit_transform(double x);
+Eigen::VectorXd logit_b1(Eigen::VectorXd theta);
 Eigen::VectorXd tau_logit(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double lambda, double s_0, int m, int p);
 int group_support_size(Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, int m);
 Eigen::VectorXi support_set(Eigen::VectorXd &beta, int p, int size);
