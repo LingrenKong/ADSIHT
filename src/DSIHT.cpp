@@ -33,7 +33,7 @@ List DSIHT_Cpp_logit(Eigen::MatrixXd &x, Eigen::VectorXd &y, Eigen::VectorXd &we
   Data_logit data(x, y, weight, g_index);
   data.add_weight();
   Algorithm *algorithm = new DSIHT_logit(data);
-  Metric *metric = new LmMetric(ic_type, ic_scale);
+  Metric *metric = new LogitMetric(ic_type, ic_scale);
   List result = sequential_path(data, algorithm, metric, sequence, kappa, ic_coef);
   algorithm -> ~Algorithm();
   metric -> ~Metric();
