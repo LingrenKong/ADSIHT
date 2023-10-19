@@ -34,4 +34,15 @@ public:
   double ic(Algorithm *algorithm, Data_Base &data);
 };
 
+class LogitMetric : public Metric {
+public:
+
+  LogitMetric(int ic_type, double ic_coef) : Metric(ic_type, ic_coef) {};
+
+  double loss(Algorithm *algorithm, Data_Base &data);
+
+  double ic(Algorithm *algorithm, Data_Base &data);
+};
+
+
 #endif //SRC_METRICS_H
