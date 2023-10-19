@@ -65,6 +65,7 @@ void DSIHTLm::fit(double s_0, double ic_coef) {
   this->A_out = support_set(this->beta, p, this->size)+Eigen::VectorXi::Ones(this->size);
 }
 
+//调参条件还没改过来，现在是正态的
 void DSIHT_logit::fit(double s_0, double ic_coef) {
   Data_Base data = this->data;
   Eigen::MatrixXd x = data.x;
@@ -81,10 +82,12 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
   double delta = Delta(s_0, m, d);
   double lam1, lam0 = pow(rho, ceil(s_0/3)-1)*max(std::sqrt(delta*y.squaredNorm()/n/n), ((x.transpose()*y/n).cwiseAbs()).maxCoeff());
   // Rcout<<"----------------------\n";
+  Eigen::VectorXd pp;
   while(1) {
     beta1 = tau_logit(x, y, beta0, gindex, gsize, lam0, s_0, m, p);
     lam1 = rho*rho*lam0;
-    if (lam1 >= 2*sqrt((y-x*beta1).squaredNorm()/n*delta/n)) {
+    pp = logit_b1(x*beta1);
+    if (lam1 >= 2*sqrt( (-y.array()*pp.array().log()-(1-y.array())*(1-pp.array()).log()).sum()/n*delta/n )) {
       beta0 = beta1;
       lam0 = lam1;
     } else {
@@ -92,7 +95,8 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
     }
   }
   beta1 = IWLS(x, y, beta1, p);
-  double delta_tbar = sqrt((y-x*beta1).squaredNorm()/n);
+  pp = logit_b1(x*beta1);
+  double delta_tbar = sqrt( (-y.array()*pp.array().log()-(1-y.array())*(1-pp.array()).log()).sum()/n );
   double ic0, ic1 = IC(x, y, beta1, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
   this->ic = ic1;
   this->beta = beta1;
