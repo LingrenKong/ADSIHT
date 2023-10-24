@@ -173,3 +173,23 @@ double IC(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::
   }
 }
 
+double IC_logit(Eigen::MatrixXd &X, Eigen::VectorXd &y, Eigen::VectorXd &beta, Eigen::VectorXi &gindex, Eigen::VectorXi &gsize, double s_0, int n, int m, int p, int d, double delta_t, double ic_coef) {
+  int size1 = group_support_size(beta, gindex, gsize, m);
+  int size2 = (beta.array() != 0).count();
+  double size3;
+  if (size1 > size2/s_0) {
+    size3 = size1;
+  }
+  else {
+    size3 = size2/s_0;
+  }
+  double omega = size3*log(exp(1)*m/size3)+s_0*size3*log(exp(1)*d/s_0);
+  Eigen::VectorXd pp = logit_b1(X*beta);
+  double ic = (-y.array()*pp.array().log()-(1-y.array())*(1-pp.array()).log()).sum() / n +ic_coef*0.5*omega*pow(delta_t, 2)/n;
+  if (isnan(ic)) {
+    return 1e10;
+  }
+  else {
+    return ic;
+  }
+}

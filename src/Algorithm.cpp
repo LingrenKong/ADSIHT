@@ -81,6 +81,7 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
   Eigen::VectorXd beta1 = Eigen::VectorXd::Zero(p);
   double delta = Delta(s_0, m, d);
   double lam1, lam0 = pow(rho, ceil(s_0/3)-1)*max(std::sqrt(delta*y.squaredNorm()/n/n), ((x.transpose()*y/n).cwiseAbs()).maxCoeff());
+  //参数选择这里可能后续要重新推
   // Rcout<<"----------------------\n";
   Eigen::VectorXd pp;
   while(1) {
@@ -97,7 +98,7 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
   beta1 = IWLS(x, y, beta1, p);
   pp = logit_b1(x*beta1);
   double delta_tbar = sqrt( (-y.array()*pp.array().log()-(1-y.array())*(1-pp.array()).log()).sum()/n );
-  double ic0, ic1 = IC(x, y, beta1, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
+  double ic0, ic1 = IC_logit(x, y, beta1, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
   this->ic = ic1;
   this->beta = beta1;
   this->lam = lam1;
@@ -107,7 +108,7 @@ void DSIHT_logit::fit(double s_0, double ic_coef) {
     Rcout<<"size:"<<(beta0.array() != 0).count()<<"\n";
     if ((beta0.array() != 0).count() >= p/5 || (beta0.array() != 0).count() >= x.rows()) break;
     lam0 = rho*lam1;
-    ic0 = IC(x, y, beta0, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
+    ic0 = IC_logit(x, y, beta0, gindex, gsize, s_0, n, m, p, d, delta_tbar, ic_coef);
     Rcout<<"-IC0:"<<ic0<<"\n";
     Rcout<<"-IC1:"<<this->ic<<"\n";
     if (ic0 < this->ic) {
